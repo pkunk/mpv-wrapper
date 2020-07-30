@@ -1,0 +1,7 @@
+.gitattributes text
+.gitignore text
+
+Cargo.toml text
+Cargo.lock text
+
+*.rs text
