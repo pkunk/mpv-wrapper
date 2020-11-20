@@ -1,9 +1,10 @@
 use std::ffi::OsString;
-use std::io::ErrorKind;
 use std::iter::once;
-use std::process::{exit, Command};
+use std::os::unix::process::CommandExt;
+use std::process::Command;
 use std::{env, io};
 
+#[cfg(target_os = "linux")]
 fn main() -> io::Result<()> {
     let mpv = "/usr/bin/mpv";
     let args = env::args_os().skip(1);
@@ -23,14 +24,8 @@ fn main() -> io::Result<()> {
         add_args(c, args)
     };
 
-    let status = command.status()?;
-    if let Some(code) = status.code() {
-        exit(code);
-    }
-    Err(io::Error::new(
-        ErrorKind::Other,
-        "Process terminated by signal",
-    ))
+    let err = command.exec();
+    Err(err)
 }
 
 fn add_args<I>(mut command: Command, args: I) -> Command
