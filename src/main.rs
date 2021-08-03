@@ -10,8 +10,8 @@ fn main() -> io::Result<()> {
     let args = env::args_os().skip(1);
 
     let mut gnome = false;
-    if let Ok(desktop) = env::var("XDG_CURRENT_DESKTOP") {
-        if desktop == "GNOME" {
+    if let Ok(status) = Command::new("gnome-session-inhibit").arg("true").status() {
+        if status.success() {
             gnome = true;
         }
     }
